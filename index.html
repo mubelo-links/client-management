@@ -8,15 +8,13 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Client Registration</title>
+    <title>PV Installation Inquiry</title>
 
-    <!-- Leaflet CSS -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
-    <!-- Our CSS -->
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -26,64 +24,579 @@
 <div class="container">
 
     <div class="header">
-        <h1>Client Registration</h1>
-        <p>Enter the client information below</p>
+
+        <div class="solar-icon">☀️</div>
+
+        <h1>PV Installation Inquiry</h1>
+
+        <p>
+            Please provide the information below
+            so our team can assess your solar PV requirements.
+        </p>
+
     </div>
 
 
     <form id="clientForm">
 
-        <!-- CLIENT NAME -->
+        <!-- CLIENT INFORMATION -->
 
-        <label for="name">
-            Client Name *
-        </label>
+        <div class="section">
 
-        <input
-            type="text"
-            id="name"
-            placeholder="Enter client name"
-            required
+            <h2>Client Information</h2>
+
+
+            <label for="name">
+                Client Name *
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Full name"
+                required
+            >
+
+
+            <label for="phone">
+                Contact Number *
+            </label>
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Phone number"
+                required
+            >
+
+
+            <label for="email">
+                Email Address
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email address"
+            >
+
+
+            <label for="address">
+                Installation Address *
+            </label>
+
+            <textarea
+                id="address"
+                placeholder="Full installation address"
+                required
+            ></textarea>
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="section">
+
+            <h2>📍 Installation Location</h2>
+
+            <p class="help-text">
+                Use your current location or tap the map
+                to place the pin. You can drag the pin
+                to the exact installation location.
+            </p>
+
+            <button
+                type="button"
+                id="locationButton"
+                class="location-button"
+            >
+                📍 Use My Current Location
+            </button>
+
+
+            <div id="map"></div>
+
+
+            <div class="coordinates">
+
+                <div>
+                    Latitude:
+                    <span id="latitude">
+                        Not selected
+                    </span>
+                </div>
+
+                <div>
+                    Longitude:
+                    <span id="longitude">
+                        Not selected
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ELECTRICITY BILL -->
+
+        <div class="section">
+
+            <h2>⚡ Electricity Bill</h2>
+
+            <p class="help-text">
+                Please upload your latest electricity bill.
+                This is required for the initial PV assessment.
+            </p>
+
+
+            <label for="electricityBill">
+                Latest Electricity Bill *
+            </label>
+
+            <input
+                type="file"
+                id="electricityBill"
+                accept=".pdf,.jpg,.jpeg,.png"
+                required
+            >
+
+
+            <div class="file-help">
+                Accepted formats: PDF, JPG, JPEG, PNG
+            </div>
+
+        </div>
+
+
+        <!-- PROPERTY INFORMATION -->
+
+        <div class="section">
+
+            <h2>🏠 Property Information</h2>
+
+
+            <label for="propertyType">
+                What type of property is this? *
+            </label>
+
+            <select
+                id="propertyType"
+                required
+            >
+
+                <option value="">
+                    Select property type
+                </option>
+
+                <option value="House">
+                    House
+                </option>
+
+                <option value="Apartment">
+                    Apartment
+                </option>
+
+                <option value="Commercial Building">
+                    Commercial Building
+                </option>
+
+                <option value="Office">
+                    Office
+                </option>
+
+                <option value="Industrial">
+                    Industrial
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+
+            <label for="propertyOwnership">
+                Do you own the property? *
+            </label>
+
+            <select
+                id="propertyOwnership"
+                required
+            >
+
+                <option value="">
+                    Select an option
+                </option>
+
+                <option value="Yes">
+                    Yes
+                </option>
+
+                <option value="No">
+                    No
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+
+            <label for="existingPV">
+                Do you currently have solar PV installed? *
+            </label>
+
+            <select
+                id="existingPV"
+                required
+            >
+
+                <option value="">
+                    Select an option
+                </option>
+
+                <option value="No">
+                    No
+                </option>
+
+                <option value="Yes">
+                    Yes
+                </option>
+
+                <option value="Not Sure">
+                    Not sure
+                </option>
+
+            </select>
+
+
+            <label for="existingPVDetails">
+                If yes, please provide any information
+                about your existing system.
+            </label>
+
+            <textarea
+                id="existingPVDetails"
+                placeholder="System size, installer, battery, age, etc."
+            ></textarea>
+
+        </div>
+
+
+        <!-- FUTURE ELECTRICITY NEEDS -->
+
+        <div class="section">
+
+            <h2>🔮 Future Electricity Needs</h2>
+
+            <p class="help-text">
+                These questions help us size the system
+                with your future electricity requirements
+                in mind.
+            </p>
+
+
+            <label for="futureConsumption">
+                Are you planning to increase your
+                electricity consumption? *
+            </label>
+
+            <select
+                id="futureConsumption"
+                required
+            >
+
+                <option value="">
+                    Select an option
+                </option>
+
+                <option value="No">
+                    No
+                </option>
+
+                <option value="Yes">
+                    Yes
+                </option>
+
+                <option value="Maybe">
+                    Maybe
+                </option>
+
+                <option value="Not Sure">
+                    Not sure
+                </option>
+
+            </select>
+
+
+            <label for="electricVehicle">
+                Do you plan to have an electric vehicle (EV)? *
+            </label>
+
+            <select
+                id="electricVehicle"
+                required
+            >
+
+                <option value="">
+                    Select an option
+                </option>
+
+                <option value="No">
+                    No
+                </option>
+
+                <option value="Yes">
+                    Yes
+                </option>
+
+                <option value="Maybe">
+                    Maybe
+                </option>
+
+                <option value="Already Have One">
+                    Already have an EV
+                </option>
+
+            </select>
+
+
+            <label>
+                Are you planning any additional
+                electrical equipment?
+            </label>
+
+            <div class="checkbox-group">
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        name="equipment"
+                        value="EV Charger"
+                    >
+
+                    <span>EV charger</span>
+
+                </label>
+
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        name="equipment"
+                        value="Swimming Pool"
+                    >
+
+                    <span>Swimming pool</span>
+
+                </label>
+
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        name="equipment"
+                        value="Air Conditioning"
+                    >
+
+                    <span>Air conditioning</span>
+
+                </label>
+
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        name="equipment"
+                        value="Heat Pump"
+                    >
+
+                    <span>Heat pump</span>
+
+                </label>
+
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        name="equipment"
+                        value="Water Heater"
+                    >
+
+                    <span>Water heater</span>
+
+                </label>
+
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        name="equipment"
+                        value="Building Extension"
+                    >
+
+                    <span>Building extension</span>
+
+                </label>
+
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        name="equipment"
+                        value="Other"
+                    >
+
+                    <span>Other</span>
+
+                </label>
+
+            </div>
+
+
+            <label for="extension">
+                Are you planning an extension
+                or additional building? *
+            </label>
+
+            <select
+                id="extension"
+                required
+            >
+
+                <option value="">
+                    Select an option
+                </option>
+
+                <option value="No">
+                    No
+                </option>
+
+                <option value="Yes">
+                    Yes
+                </option>
+
+                <option value="Maybe">
+                    Maybe
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- REASON FOR SOLAR -->
+
+        <div class="section">
+
+            <h2>☀️ Your Solar Requirements</h2>
+
+
+            <label for="solarReason">
+                What is your main reason
+                for considering solar PV? *
+            </label>
+
+            <select
+                id="solarReason"
+                required
+            >
+
+                <option value="">
+                    Select your main reason
+                </option>
+
+                <option value="Reduce Electricity Bill">
+                    Reduce electricity bill
+                </option>
+
+                <option value="Energy Independence">
+                    Energy independence
+                </option>
+
+                <option value="Environmental Reasons">
+                    Environmental reasons
+                </option>
+
+                <option value="Backup / Resilience">
+                    Backup / resilience
+                </option>
+
+                <option value="New Construction">
+                    New construction
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ADDITIONAL INFORMATION -->
+
+        <div class="section">
+
+            <h2>📝 Additional Information</h2>
+
+            <p class="help-text">
+                Is there anything else our PV team
+                should know about your property,
+                electricity usage or future plans?
+            </p>
+
+            <textarea
+                id="notes"
+                class="large-textarea"
+                placeholder="Please tell us anything else that may be useful..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- SUBMIT -->
+
+        <button
+            type="submit"
+            class="submit-button"
         >
+            Submit PV Inquiry
+        </button>
 
 
-        <!-- PHONE -->
+        <p class="required-note">
+            * Required fields
+        </p>
 
-        <label for="phone">
-            Contact Number *
-        </label>
-
-        <input
-            type="tel"
-            id="phone"
-            placeholder="Enter phone number"
-            required
-        >
+    </form>
 
 
-        <!-- EMAIL -->
+    <div id="message"></div>
 
-        <label for="email">
-            Email
-        </label>
-
-        <input
-            type="email"
-            id="email"
-            placeholder="Enter email"
-        >
+</div>
 
 
-        <!-- ADDRESS -->
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
-        <label for="address">
-            Address
-        </label>
+<script src="app.js"></script>
 
-        <textarea
-            id="address"
-            placeholder="Enter client address"
-        ></textarea>
+</body>
+
+</html>
 
 
         <!-- LOCATION -->
