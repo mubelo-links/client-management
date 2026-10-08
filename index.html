@@ -1,41 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Client Registration</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            padding: 20px;
-        }
+    <!-- Leaflet CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
 
-        .box {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-        }
+    <!-- Our CSS -->
+    <link rel="stylesheet" href="style.css">
 
-        h1 {
-            color: #1a73e8;
-        }
-    </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
 
-    <h1>Client Registration</h1>
+    <div class="header">
+        <h1>Client Registration</h1>
+        <p>Enter the client information below</p>
+    </div>
 
-    <p>Our client registration system is working.</p>
+
+    <form id="clientForm">
+
+        <!-- CLIENT NAME -->
+
+        <label for="name">
+            Client Name *
+        </label>
+
+        <input
+            type="text"
+            id="name"
+            placeholder="Enter client name"
+            required
+        >
+
+
+        <!-- PHONE -->
+
+        <label for="phone">
+            Contact Number *
+        </label>
+
+        <input
+            type="tel"
+            id="phone"
+            placeholder="Enter phone number"
+            required
+        >
+
+
+        <!-- EMAIL -->
+
+        <label for="email">
+            Email
+        </label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter email"
+        >
+
+
+        <!-- ADDRESS -->
+
+        <label for="address">
+            Address
+        </label>
+
+        <textarea
+            id="address"
+            placeholder="Enter client address"
+        ></textarea>
+
+
+        <!-- LOCATION -->
+
+        <label>
+            Client Location *
+        </label>
+
+        <button
+            type="button"
+            id="locationButton"
+            class="location-button"
+        >
+            📍 Use My Current Location
+        </button>
+
+
+        <!-- MAP -->
+
+        <div id="map"></div>
+
+
+        <!-- COORDINATES -->
+
+        <div class="coordinates">
+
+            <div>
+                Latitude:
+                <span id="latitude">
+                    Not selected
+                </span>
+            </div>
+
+            <div>
+                Longitude:
+                <span id="longitude">
+                    Not selected
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- PDF -->
+
+        <label for="pdf">
+            PDF Document
+        </label>
+
+        <input
+            type="file"
+            id="pdf"
+            accept="application/pdf"
+        >
+
+
+        <!-- PHOTO -->
+
+        <label for="photo">
+            Client / Site Photo
+        </label>
+
+        <input
+            type="file"
+            id="photo"
+            accept="image/*"
+            capture="environment"
+        >
+
+
+        <!-- NOTES -->
+
+        <label for="notes">
+            Notes
+        </label>
+
+        <textarea
+            id="notes"
+            placeholder="Additional information..."
+        ></textarea>
+
+
+        <!-- SUBMIT -->
+
+        <button
+            type="submit"
+            class="submit-button"
+        >
+            Submit Client
+        </button>
+
+    </form>
+
+
+    <div id="message"></div>
 
 </div>
 
+
+<!-- Leaflet JavaScript -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<!-- Our JavaScript -->
+
+<script src="app.js"></script>
+
 </body>
+
 </html>
