@@ -7,23 +7,21 @@ let latitude = null;
 let longitude = null;
 
 
-// Mauritius starting position
-
 const defaultLocation = [
     -20.1609,
     57.5012
 ];
 
 
-// Create map
+// ==============================
+// CREATE MAP
+// ==============================
 
 map = L.map("map").setView(
     defaultLocation,
     11
 );
 
-
-// OpenStreetMap tiles
 
 L.tileLayer(
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -36,7 +34,9 @@ L.tileLayer(
 ).addTo(map);
 
 
-// Put marker on map
+// ==============================
+// SET LOCATION
+// ==============================
 
 function setLocation(lat, lng) {
 
@@ -67,8 +67,6 @@ function setLocation(lat, lng) {
         ).addTo(map);
 
 
-        // Marker moved
-
         marker.on(
             "dragend",
             function(event) {
@@ -76,10 +74,12 @@ function setLocation(lat, lng) {
                 const position =
                     event.target.getLatLng();
 
+
                 setLocation(
                     position.lat,
                     position.lng
                 );
+
             }
         );
 
@@ -88,6 +88,7 @@ function setLocation(lat, lng) {
         marker.setLatLng(
             [lat, lng]
         );
+
     }
 
 
@@ -95,10 +96,13 @@ function setLocation(lat, lng) {
         [lat, lng],
         17
     );
+
 }
 
 
-// Click map to place pin
+// ==============================
+// CLICK MAP
+// ==============================
 
 map.on(
     "click",
@@ -113,7 +117,9 @@ map.on(
 );
 
 
-// GPS button
+// ==============================
+// GPS
+// ==============================
 
 document
     .getElementById("locationButton")
@@ -128,6 +134,7 @@ document
                 );
 
                 return;
+
             }
 
 
@@ -152,10 +159,11 @@ document
                         "locationButton"
                     ).textContent =
                         "✅ Location Found";
+
                 },
 
 
-                function(error) {
+                function() {
 
                     document.getElementById(
                         "locationButton"
@@ -173,19 +181,24 @@ document
 
 
                 {
+
                     enableHighAccuracy: true,
 
                     timeout: 15000,
 
                     maximumAge: 0
+
                 }
+
             );
 
         }
     );
 
 
-// Form submission
+// ==============================
+// FORM SUBMISSION
+// ==============================
 
 document
     .getElementById("clientForm")
@@ -196,72 +209,155 @@ document
             event.preventDefault();
 
 
+            // Check location
+
             if (
                 latitude === null ||
                 longitude === null
             ) {
 
                 alert(
-                    "Please select the client's location."
+                    "Please select the installation location on the map."
                 );
 
                 return;
+
             }
 
 
-            const name =
+            // Electricity bill
+
+            const bill =
                 document.getElementById(
-                    "name"
-                ).value;
+                    "electricityBill"
+                ).files[0];
 
 
-            const phone =
-                document.getElementById(
-                    "phone"
-                ).value;
+            if (!bill) {
+
+                alert(
+                    "Please upload your latest electricity bill."
+                );
+
+                return;
+
+            }
 
 
-            const email =
-                document.getElementById(
-                    "email"
-                ).value;
+            // Collect equipment
+
+            const equipment = [];
 
 
-            const address =
-                document.getElementById(
-                    "address"
-                ).value;
+            document
+                .querySelectorAll(
+                    'input[name="equipment"]:checked'
+                )
+                .forEach(
+                    function(item) {
+
+                        equipment.push(
+                            item.value
+                        );
+
+                    }
+                );
 
 
-            const notes =
-                document.getElementById(
-                    "notes"
-                ).value;
+            // Collect form data
+
+            const inquiry = {
+
+                name:
+                    document.getElementById(
+                        "name"
+                    ).value,
+
+                phone:
+                    document.getElementById(
+                        "phone"
+                    ).value,
+
+                email:
+                    document.getElementById(
+                        "email"
+                    ).value,
+
+                address:
+                    document.getElementById(
+                        "address"
+                    ).value,
+
+                latitude:
+                    latitude,
+
+                longitude:
+                    longitude,
+
+                electricityBill:
+                    bill.name,
+
+                propertyType:
+                    document.getElementById(
+                        "propertyType"
+                    ).value,
+
+                propertyOwnership:
+                    document.getElementById(
+                        "propertyOwnership"
+                    ).value,
+
+                existingPV:
+                    document.getElementById(
+                        "existingPV"
+                    ).value,
+
+                existingPVDetails:
+                    document.getElementById(
+                        "existingPVDetails"
+                    ).value,
+
+                futureConsumption:
+                    document.getElementById(
+                        "futureConsumption"
+                    ).value,
+
+                electricVehicle:
+                    document.getElementById(
+                        "electricVehicle"
+                    ).value,
+
+                futureEquipment:
+                    equipment,
+
+                extension:
+                    document.getElementById(
+                        "extension"
+                    ).value,
+
+                solarReason:
+                    document.getElementById(
+                        "solarReason"
+                    ).value,
+
+                notes:
+                    document.getElementById(
+                        "notes"
+                    ).value
+
+            };
 
 
-            console.log({
-
-                name,
-
-                phone,
-
-                email,
-
-                address,
-
-                latitude,
-
-                longitude,
-
-                notes
-
-            });
+            console.log(
+                "PV Installation Inquiry:",
+                inquiry
+            );
 
 
             document.getElementById(
                 "message"
             ).textContent =
-                "✅ Form captured successfully. Database connection comes next.";
+                "✅ PV inquiry captured successfully. SharePoint connection comes next.";
 
         }
     );
