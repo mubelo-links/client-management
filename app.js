@@ -1,464 +1,518 @@
-let map;
+"use strict";
 
+// ============================================
+// PV INSTALLATION INQUIRY
+// Map, file previews and form handling
+// ============================================
+
+
+// ============================================
+// 1. ELEMENTS
+// ============================================
+
+const clientForm = document.getElementById("clientForm");
+const locationButton = document.getElementById("locationButton");
+const billInput = document.getElementById("electricityBill");
+const filePreview = document.getElementById("filePreview");
+const message = document.getElementById("message");
+const submitButton = document.getElementById("submitButton");
+
+const latitudeDisplay = document.getElementById("latitude");
+const longitudeDisplay = document.getElementById("longitude");
+
+const latitudeValue = document.getElementById("latitudeValue");
+const longitudeValue = document.getElementById("longitudeValue");
+
+let map = null;
 let marker = null;
-
 let latitude = null;
-
 let longitude = null;
 
+// Store selected files so users can add files in multiple selections.
+let selectedBills = [];
 
-const defaultLocation = [
-    -20.1609,
-    57.5012
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB per file
+
+const ALLOWED_EXTENSIONS = /\.(pdf|jpe?g|png)$/i;
+
+const ALLOWED_TYPES = [
+    "application/pdf",
+    "image/jpeg",
+    "image/png"
 ];
 
-
-// ==============================
-// CREATE MAP
-// ==============================
-
-map = L.map("map").setView(
-    defaultLocation,
-    11
-);
+const defaultLocation = [-20.1609, 57.5012];
 
 
-L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-        maxZoom: 19,
+// ============================================
+// 2. MAP INITIALIZATION
+// ============================================
 
-        attribution:
-            '&copy; OpenStreetMap contributors'
+function initializeMap() {
+    if (typeof L === "undefined") {
+        showMessage(
+            "The map library could not load. Please refresh the page.",
+            "error"
+        );
+        return;
     }
-).addTo(map);
+
+    const mapElement = document.getElementById("map");
+
+    if (!mapElement) {
+        return;
+    }
+
+    map = L.map("map").setView(defaultLocation, 11);
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(map);
+
+    map.on("click", function (event) {
+        setLocation(event.latlng.lat, event.latlng.lng);
+    });
+
+    // Help Leaflet calculate the correct map size.
+    setTimeout(function () {
+        map.invalidateSize();
+    }, 100);
+}
 
 
-// ==============================
-// SET LOCATION
-// ==============================
+// ============================================
+// 3. SET INSTALLATION LOCATION
+// ============================================
 
 function setLocation(lat, lng) {
+    if (
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng) ||
+        lat < -90 ||
+        lat > 90 ||
+        lng < -180 ||
+        lng > 180
+    ) {
+        return;
+    }
 
     latitude = lat;
-
     longitude = lng;
 
+    latitudeDisplay.textContent = lat.toFixed(6);
+    longitudeDisplay.textContent = lng.toFixed(6);
 
-    document.getElementById(
-        "latitude"
-    ).textContent =
-        lat.toFixed(6);
+    if (latitudeValue) {
+        latitudeValue.value = lat;
+    }
 
+    if (longitudeValue) {
+        longitudeValue.value = lng;
+    }
 
-    document.getElementById(
-        "longitude"
-    ).textContent =
-        lng.toFixed(6);
+    if (!map) {
+        return;
+    }
 
+    if (!marker) {
+        marker = L.marker([lat, lng], {
+            draggable: true
+        }).addTo(map);
 
-    if (marker === null) {
+        marker.on("dragend", function (event) {
+            const position = event.target.getLatLng();
 
-        marker = L.marker(
-            [lat, lng],
-            {
-                draggable: true
-            }
-        ).addTo(map);
-
-
-        marker.on(
-            "dragend",
-            function(event) {
-
-                const position =
-                    event.target.getLatLng();
-
-
-                setLocation(
-                    position.lat,
-                    position.lng
-                );
-
-            }
-        );
-
+            setLocation(position.lat, position.lng);
+        });
     } else {
-
-        marker.setLatLng(
-            [lat, lng]
-        );
-
+        marker.setLatLng([lat, lng]);
     }
 
-
-    map.setView(
-        [lat, lng],
-        17
-    );
-
+    map.setView([lat, lng], 17);
 }
 
 
-// ==============================
-// CLICK MAP
-// ==============================
+// ============================================
+// 4. CURRENT GPS LOCATION
+// ============================================
 
-map.on(
-    "click",
-    function(event) {
-
-        setLocation(
-            event.latlng.lat,
-            event.latlng.lng
+locationButton.addEventListener("click", function () {
+    if (!navigator.geolocation) {
+        showMessage(
+            "Your browser does not support location services. Please select your location on the map.",
+            "error"
         );
-
+        return;
     }
-);
 
+    const originalText = "📍 Use My Current Location";
 
-// ==============================
-// GPS
-// ==============================
+    locationButton.disabled = true;
+    locationButton.textContent = "📍 Finding your location...";
 
-document
-    .getElementById("locationButton")
-    .addEventListener(
-        "click",
-        function() {
-
-            if (!navigator.geolocation) {
-
-                alert(
-                    "Your browser does not support GPS."
-                );
-
-                return;
-
-            }
-
-
-            this.textContent =
-                "📍 Finding your location...";
-
-
-            navigator.geolocation.getCurrentPosition(
-
-                function(position) {
-
-                    setLocation(
-
-                        position.coords.latitude,
-
-                        position.coords.longitude
-
-                    );
-
-
-                    document.getElementById(
-                        "locationButton"
-                    ).textContent =
-                        "✅ Location Found";
-
-                },
-
-
-                function() {
-
-                    document.getElementById(
-                        "locationButton"
-                    ).textContent =
-                        "📍 Use My Current Location";
-
-
-                    alert(
-                        "Could not get your location. " +
-                        "Please allow location access " +
-                        "or select the position manually on the map."
-                    );
-
-                },
-
-
-                {
-
-                    enableHighAccuracy: true,
-
-                    timeout: 15000,
-
-                    maximumAge: 0
-
-                }
-
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            setLocation(
+                position.coords.latitude,
+                position.coords.longitude
             );
 
+            locationButton.textContent = "✅ Location Found";
+            locationButton.disabled = false;
+
+            showMessage(
+                "Installation location selected successfully.",
+                "success"
+            );
+        },
+
+        function (error) {
+            locationButton.textContent = originalText;
+            locationButton.disabled = false;
+
+            let errorText =
+                "Could not determine your location. Please select it manually on the map.";
+
+            if (error.code === error.PERMISSION_DENIED) {
+                errorText =
+                    "Location access was denied. Allow location permission in your browser or select the position manually on the map.";
+            } else if (error.code === error.TIMEOUT) {
+                errorText =
+                    "Location request timed out. Please try again or select the position manually.";
+            }
+
+            showMessage(errorText, "error");
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
         }
     );
+});
 
 
-// ==============================
-// FORM SUBMISSION
-// ==============================
+// ============================================
+// 5. FILE VALIDATION
+// ============================================
 
-document
-    .getElementById("clientForm")
-    .addEventListener(
-        "submit",
-        function(event) {
+function validateFile(file) {
+    const extensionIsValid = ALLOWED_EXTENSIONS.test(file.name);
 
-            event.preventDefault();
+    const typeIsValid =
+        ALLOWED_TYPES.includes(file.type) ||
+        (
+            file.type === "" &&
+            extensionIsValid
+        );
 
+    if (!extensionIsValid || !typeIsValid) {
+        return "Unsupported file type. Please select a PDF, JPG, JPEG or PNG.";
+    }
 
-            // Check location
+    if (file.size > MAX_FILE_SIZE) {
+        return "This file exceeds the 10 MB limit.";
+    }
 
-            if (
-                latitude === null ||
-                longitude === null
-            ) {
+    if (file.size === 0) {
+        return "This file is empty.";
+    }
 
-                alert(
-                    "Please select the installation location on the map."
-                );
-
-                return;
-
-            }
-
-
-            // Electricity bill
-
-            const bill =
-                document.getElementById(
-                    "electricityBill"
-                ).files[0];
+    return null;
+}
 
 
-            if (!bill) {
+// ============================================
+// 6. FORMAT FILE SIZE
+// ============================================
 
-                alert(
-                    "Please upload your latest electricity bill."
-                );
+function formatFileSize(bytes) {
+    if (bytes < 1024 * 1024) {
+        return (bytes / 1024).toFixed(1) + " KB";
+    }
 
-                return;
-
-            }
-
-
-            // Collect equipment
-
-            const equipment = [];
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
 
 
-            document
-                .querySelectorAll(
-                    'input[name="equipment"]:checked'
-                )
-                .forEach(
-                    function(item) {
+// ============================================
+// 7. SELECT MULTIPLE FILES
+// ============================================
 
-                        equipment.push(
-                            item.value
-                        );
+billInput.addEventListener("change", function () {
+    const newlySelectedFiles = Array.from(billInput.files);
+    const errors = [];
 
-                    }
-                );
+    newlySelectedFiles.forEach(function (file) {
+        const validationError = validateFile(file);
+
+        if (validationError) {
+            errors.push(file.name + ": " + validationError);
+            return;
+        }
+
+        const duplicate = selectedBills.some(function (existingFile) {
+            return (
+                existingFile.name === file.name &&
+                existingFile.size === file.size &&
+                existingFile.lastModified === file.lastModified
+            );
+        });
+
+        if (!duplicate) {
+            selectedBills.push(file);
+        }
+    });
+
+    syncBillInput();
+    renderBillPreviews();
+
+    if (errors.length > 0) {
+        showMessage(errors.join("\n"), "error");
+    } else {
+        clearMessage();
+    }
+});
 
 
-            // Collect form data
+// ============================================
+// 8. SYNC SELECTED FILES WITH INPUT
+// ============================================
 
-            const inquiry = {
+function syncBillInput() {
+    const transfer = new DataTransfer();
 
-                name:
-                    document.getElementById(
-                        "name"
-                    ).value,
+    selectedBills.forEach(function (file) {
+        transfer.items.add(file);
+    });
 
-                phone:
-                    document.getElementById(
-                        "phone"
-                    ).value,
+    billInput.files = transfer.files;
+}
 
-                email:
-                    document.getElementById(
-                        "email"
-                    ).value,
 
-                address:
-                    document.getElementById(
-                        "address"
-                    ).value,
+// ============================================
+// 9. DISPLAY FILE PREVIEWS
+// ============================================
 
-                latitude:
-                    latitude,
+function renderBillPreviews() {
+    filePreview.replaceChildren();
 
-                longitude:
-                    longitude,
+    selectedBills.forEach(function (file, index) {
+        const item = document.createElement("div");
+        item.className = "file-item";
 
-                electricityBill:
-                    bill.name,
+        // Thumbnail or PDF icon
+        const thumbnail = document.createElement("div");
+        thumbnail.className = "file-thumbnail";
 
-                propertyType:
-                    document.getElementById(
-                        "propertyType"
-                    ).value,
+        if (file.type.startsWith("image/")) {
+            const image = document.createElement("img");
 
-                propertyOwnership:
-                    document.getElementById(
-                        "propertyOwnership"
-                    ).value,
+            image.alt = "Preview of " + file.name;
+            image.src = URL.createObjectURL(file);
 
-                existingPV:
-                    document.getElementById(
-                        "existingPV"
-                    ).value,
+            thumbnail.appendChild(image);
+        } else {
+            thumbnail.textContent = "📄";
+            thumbnail.setAttribute("aria-label", "PDF document");
+        }
 
-                existingPVDetails:
-                    document.getElementById(
-                        "existingPVDetails"
-                    ).value,
+        // File details
+        const details = document.createElement("div");
+        details.className = "file-details";
 
-                futureConsumption:
-                    document.getElementById(
-                        "futureConsumption"
-                    ).value,
+        const name = document.createElement("div");
+        name.className = "file-name";
+        name.textContent = file.name;
 
-                electricVehicle:
-                    document.getElementById(
-                        "electricVehicle"
-                    ).value,
+        const size = document.createElement("div");
+        size.className = "file-size";
+        size.textContent = formatFileSize(file.size);
 
-                futureEquipment:
-                    equipment,
+        const status = document.createElement("div");
+        status.className = "file-status";
+        status.textContent = "✓ Selected";
 
-                extension:
-                    document.getElementById(
-                        "extension"
-                    ).value,
+        details.append(name, size, status);
 
-                solarReason:
-                    document.getElementById(
-                        "solarReason"
-                    ).value,
+        // Remove button
+        const removeButton = document.createElement("button");
 
-                notes:
-                    document.getElementById(
-                        "notes"
-                    ).value
+        removeButton.type = "button";
+        removeButton.className = "file-remove";
+        removeButton.textContent = "Remove";
 
+        removeButton.setAttribute(
+            "aria-label",
+            "Remove " + file.name
+        );
+
+        removeButton.addEventListener("click", function () {
+            selectedBills.splice(index, 1);
+
+            syncBillInput();
+            renderBillPreviews();
+            clearMessage();
+        });
+
+        item.append(thumbnail, details, removeButton);
+        filePreview.appendChild(item);
+    });
+
+    // Make the bill upload mandatory even after removing files.
+    billInput.required = selectedBills.length === 0;
+}
+
+
+// ============================================
+// 10. DISPLAY MESSAGES
+// ============================================
+
+function showMessage(text, type) {
+    message.textContent = text;
+    message.className = type;
+    message.style.whiteSpace = "pre-line";
+}
+
+function clearMessage() {
+    message.textContent = "";
+    message.className = "";
+    message.style.whiteSpace = "";
+}
+
+
+// ============================================
+// 11. COLLECT FORM DATA
+// ============================================
+
+function collectInquiry() {
+    const formData = new FormData(clientForm);
+
+    const equipment = Array.from(
+        document.querySelectorAll(
+            'input[name="equipment"]:checked'
+        )
+    ).map(function (item) {
+        return item.value;
+    });
+
+    const inquiry = {
+        name: formData.get("name"),
+        phone: formData.get("phone"),
+        email: formData.get("email"),
+        address: formData.get("address"),
+
+        latitude: latitude,
+        longitude: longitude,
+
+        propertyType: formData.get("propertyType"),
+        propertyOwnership: formData.get("propertyOwnership"),
+
+        existingPV: formData.get("existingPV"),
+        existingPVDetails: formData.get("existingPVDetails"),
+
+        futureConsumption: formData.get("futureConsumption"),
+        electricVehicle: formData.get("electricVehicle"),
+
+        futureEquipment: equipment,
+        extension: formData.get("extension"),
+        solarReason: formData.get("solarReason"),
+        notes: formData.get("notes"),
+
+        electricityBills: selectedBills.map(function (file) {
+            return {
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                file: file
             };
+        })
+    };
+
+    return inquiry;
+}
 
 
-            console.log(
-                "PV Installation Inquiry:",
-                inquiry
-            );
+// ============================================
+// 12. FORM SUBMISSION
+// ============================================
 
+clientForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    clearMessage();
 
-            document.getElementById(
-                "message"
-            ).textContent =
-                "✅ PV inquiry captured successfully. SharePoint connection comes next.";
+    // Validate location.
+    if (latitude === null || longitude === null) {
+        showMessage(
+            "Please select the installation location on the map.",
+            "error"
+        );
 
+        document.getElementById("map").scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        return;
+    }
+
+    // Validate files.
+    if (selectedBills.length === 0) {
+        showMessage(
+            "Please upload at least one electricity bill or document.",
+            "error"
+        );
+
+        billInput.focus();
+        return;
+    }
+
+    // Validate every selected file again before submission.
+    for (const file of selectedBills) {
+        const error = validateFile(file);
+
+        if (error) {
+            showMessage(file.name + ": " + error, "error");
+            return;
         }
+    }
+
+    const inquiry = collectInquiry();
+
+    /*
+     * DEMONSTRATION ONLY:
+     * This creates the inquiry object in the browser.
+     * It does NOT send files to SharePoint or a server.
+     */
+
+    console.log("PV Installation Inquiry:", inquiry);
+
+    console.table({
+        name: inquiry.name,
+        phone: inquiry.phone,
+        email: inquiry.email,
+        latitude: inquiry.latitude,
+        longitude: inquiry.longitude,
+        numberOfDocuments: inquiry.electricityBills.length
+    });
+
+    showMessage(
+        "✓ Your form has passed the browser checks. " +
+        "Your inquiry has NOT been sent yet. " +
+        "Connect the submission handler to SharePoint or a backend to save your details and documents.",
+        "success"
     );
+});
 
-/* Multiple file upload previews */
 
-.file-preview {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 16px;
-}
+// ============================================
+// 13. START APPLICATION
+// ============================================
 
-.file-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    min-width: 0;
-}
-
-.file-thumbnail {
-    width: 58px;
-    height: 58px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    background: #eaf7ed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    overflow: hidden;
-}
-
-.file-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.file-details {
-    flex: 1;
-    min-width: 0;
-}
-
-.file-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1e293b;
-    overflow-wrap: anywhere;
-}
-
-.file-size {
-    margin-top: 5px;
-    font-size: 12px;
-    color: #64748b;
-}
-
-.file-status {
-    color: #15803d;
-    font-size: 13px;
-    font-weight: 600;
-    margin-top: 4px;
-}
-
-.file-remove {
-    border: none;
-    background: #fee2e2;
-    color: #b91c1c;
-    border-radius: 7px;
-    padding: 8px 10px;
-    cursor: pointer;
-    font-size: 13px;
-    flex-shrink: 0;
-}
-
-.file-remove:hover {
-    background: #fecaca;
-}
-
-.file-error {
-    color: #b91c1c;
-    font-size: 13px;
-    margin-top: 8px;
-}
-
-@media (max-width: 480px) {
-    .file-item {
-        gap: 8px;
-        padding: 9px;
-    }
-
-    .file-thumbnail {
-        width: 48px;
-        height: 48px;
-    }
-
-    .file-remove {
-        padding: 7px;
-    }
-}
+initializeMap();
+renderBillPreviews();
