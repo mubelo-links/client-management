@@ -139,36 +139,38 @@
         </div>
 
 
-        <!-- ELECTRICITY BILL -->
+      <!-- ELECTRICITY BILL UPLOAD -->
 
-        <div class="section">
+<div class="section">
 
-            <h2>⚡ Electricity Bill</h2>
+    <h2>⚡ Electricity Bill</h2>
 
-            <p class="help-text">
-                Please upload your latest electricity bill.
-                This is required for the initial PV assessment.
-            </p>
+    <p class="help-text">
+        Please upload your latest electricity bill.
+        You can select multiple photos or PDF files.
+    </p>
 
+    <label for="electricityBill">
+        Electricity Bills / Documents *
+    </label>
 
-            <label for="electricityBill">
-                Latest Electricity Bill *
-            </label>
+    <input
+        type="file"
+        id="electricityBill"
+        accept=".pdf,.jpg,.jpeg,.png"
+        multiple
+        required
+    >
 
-            <input
-                type="file"
-                id="electricityBill"
-                accept=".pdf,.jpg,.jpeg,.png"
-                required
-            >
+    <div class="file-help">
+        Accepted formats: PDF, JPG, JPEG, PNG.
+        You can upload multiple files.
+    </div>
 
+    <!-- Selected files will appear here -->
+    <div id="filePreview" class="file-preview"></div>
 
-            <div class="file-help">
-                Accepted formats: PDF, JPG, JPEG, PNG
-            </div>
-
-        </div>
-
+</div>
 
         <!-- PROPERTY INFORMATION -->
 
