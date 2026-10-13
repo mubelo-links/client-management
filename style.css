@@ -421,8 +421,6 @@ select:focus {
 
 }
 
-/* Multiple file upload previews */
-
 .file-preview {
     display: flex;
     flex-direction: column;
