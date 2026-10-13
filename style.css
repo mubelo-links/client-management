@@ -1,425 +1,260 @@
+/* =========================================
+   PV INSTALLATION INQUIRY
+   Main stylesheet
+========================================= */
+
 * {
     box-sizing: border-box;
 }
 
+:root {
+    --primary: #166534;
+    --primary-hover: #14532d;
+    --primary-light: #eef7ef;
+    --accent: #f59e0b;
+    --accent-hover: #d97706;
+    --text: #222222;
+    --muted: #666666;
+    --border: #e3e6e8;
+    --surface: #ffffff;
+    --background: #f2f5f7;
+    --danger: #b91c1c;
+}
+
+/* =========================================
+   PAGE AND CONTAINER
+========================================= */
 
 body {
-
     margin: 0;
-
     padding: 15px;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    background: #f2f5f7;
-
-    color: #222;
-
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.5;
 }
-
 
 .container {
-
+    width: 100%;
     max-width: 650px;
-
     margin: 0 auto;
-
-    background: #ffffff;
-
     padding: 24px;
-
+    background: var(--surface);
     border-radius: 16px;
-
-    box-shadow:
-        0 4px 20px
-        rgba(0, 0, 0, 0.10);
-
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.10);
 }
 
+/* =========================================
+   HEADER
+========================================= */
 
 .header {
-
     text-align: center;
-
     padding-bottom: 20px;
-
 }
-
 
 .solar-icon {
-
     font-size: 42px;
-
+    line-height: 1.3;
 }
-
 
 .header h1 {
-
     margin: 8px 0;
-
-    color: #166534;
-
+    color: var(--primary);
     font-size: 28px;
-
+    line-height: 1.3;
 }
-
 
 .header p {
-
-    color: #666;
-
-    line-height: 1.5;
-
+    margin-bottom: 0;
+    color: var(--muted);
+    line-height: 1.6;
 }
 
+/* =========================================
+   FORM SECTIONS
+========================================= */
 
 .section {
-
     margin-top: 25px;
-
     padding: 20px;
-
     background: #fafafa;
-
-    border: 1px solid #e3e6e8;
-
+    border: 1px solid var(--border);
     border-radius: 12px;
-
+    min-width: 0;
 }
-
 
 .section h2 {
-
-    margin-top: 0;
-
-    margin-bottom: 15px;
-
-    color: #166534;
-
+    margin: 0 0 15px;
+    color: var(--primary);
     font-size: 20px;
-
+    line-height: 1.4;
 }
-
 
 .help-text {
-
-    color: #666;
-
+    margin: 0 0 15px;
+    color: var(--muted);
     font-size: 14px;
-
-    line-height: 1.5;
-
+    line-height: 1.6;
 }
 
+/* =========================================
+   FORM LABELS AND INPUTS
+========================================= */
 
 label {
-
     display: block;
-
     margin-top: 18px;
-
     margin-bottom: 7px;
-
     font-weight: bold;
-
 }
-
 
 input,
 textarea,
 select {
-
+    display: block;
     width: 100%;
-
+    max-width: 100%;
     padding: 13px;
-
     border: 1px solid #c9ced3;
-
     border-radius: 8px;
-
+    font-family: inherit;
     font-size: 16px;
-
-    background: #fff;
-
+    color: var(--text);
+    background: #ffffff;
 }
 
+input,
+select,
+textarea {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 
 select {
-
     cursor: pointer;
-
 }
-
 
 textarea {
-
     min-height: 90px;
-
     resize: vertical;
-
 }
-
 
 .large-textarea {
-
     min-height: 140px;
-
 }
-
 
 input:focus,
 textarea:focus,
 select:focus {
-
     outline: none;
-
     border-color: #16a34a;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(22, 163, 74, 0.12);
-
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
 }
 
+input::placeholder,
+textarea::placeholder {
+    color: #8a9299;
+}
+
+/* =========================================
+   LOCATION BUTTON
+========================================= */
 
 .location-button {
-
+    display: block;
     width: 100%;
-
     padding: 14px;
-
     margin: 10px 0 12px;
-
     border: none;
-
     border-radius: 8px;
-
     background: #15803d;
-
-    color: white;
-
+    color: #ffffff;
     font-size: 16px;
-
     font-weight: bold;
-
     cursor: pointer;
-
+    transition: background 0.2s ease;
 }
-
 
 .location-button:hover {
-
-    background: #166534;
-
+    background: var(--primary-hover);
 }
 
+.location-button:focus-visible,
+.submit-button:focus-visible,
+.file-remove:focus-visible {
+    outline: 3px solid #86efac;
+    outline-offset: 3px;
+}
+
+/* =========================================
+   LEAFLET MAP
+========================================= */
 
 #map {
-
     width: 100%;
-
     height: 350px;
-
     border-radius: 10px;
-
     overflow: hidden;
-
+    background: #e5e7eb;
+    z-index: 1;
 }
-
 
 .coordinates {
-
-    background: #eef7ef;
-
-    padding: 12px;
-
     margin-top: 10px;
-
+    padding: 12px;
     border-radius: 8px;
-
+    background: var(--primary-light);
     font-size: 14px;
-
     line-height: 1.8;
-
+    overflow-wrap: anywhere;
 }
 
+.coordinates span {
+    font-weight: 600;
+}
+
+/* =========================================
+   FILE UPLOAD INPUT
+========================================= */
+
+#electricityBill {
+    padding: 12px;
+    border: 1px dashed #9ca3af;
+    border-radius: 8px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+#electricityBill:hover {
+    border-color: #16a34a;
+    background: #f9fdf9;
+}
+
+#electricityBill::file-selector-button {
+    margin-right: 12px;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #eaf7ed;
+    color: var(--primary);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#electricityBill::file-selector-button:hover {
+    background: #d7f0dc;
+}
 
 .file-help {
-
-    margin-top: 7px;
-
-    color: #777;
-
+    margin-top: 8px;
+    color: #777777;
     font-size: 13px;
-
+    line-height: 1.5;
 }
 
-
-.checkbox-group {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 10px;
-
-    margin-top: 10px;
-
-}
-
-
-.checkbox {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    margin: 0;
-
-    padding: 10px;
-
-    background: white;
-
-    border: 1px solid #ddd;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-}
-
-
-.checkbox input {
-
-    width: auto;
-
-    margin: 0;
-
-}
-
-
-.checkbox span {
-
-    font-weight: normal;
-
-}
-
-
-.submit-button {
-
-    width: 100%;
-
-    padding: 16px;
-
-    margin-top: 25px;
-
-    border: none;
-
-    border-radius: 9px;
-
-    background: #f59e0b;
-
-    color: #111;
-
-    font-size: 18px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-}
-
-
-.submit-button:hover {
-
-    background: #d97706;
-
-}
-
-
-.submit-button:disabled {
-
-    opacity: 0.6;
-
-    cursor: not-allowed;
-
-}
-
-
-.required-note {
-
-    text-align: center;
-
-    color: #777;
-
-    font-size: 13px;
-
-}
-
-
-#message {
-
-    text-align: center;
-
-    margin-top: 18px;
-
-    font-weight: bold;
-
-}
-
-
-@media (max-width: 550px) {
-
-    body {
-
-        padding: 8px;
-
-    }
-
-
-    .container {
-
-        padding: 12px;
-
-        border-radius: 10px;
-
-    }
-
-
-    .section {
-
-        padding: 15px;
-
-    }
-
-
-    .header h1 {
-
-        font-size: 24px;
-
-    }
-
-
-    #map {
-
-        height: 300px;
-
-    }
-
-
-    .checkbox-group {
-
-        grid-template-columns: 1fr;
-
-    }
-
-}
+/* =========================================
+   SELECTED FILE PREVIEWS
+========================================= */
 
 .file-preview {
     display: flex;
@@ -432,90 +267,321 @@ select:focus {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
+    width: 100%;
     min-width: 0;
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid #dfe5e9;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.2s ease;
 }
 
+.file-item:hover {
+    border-color: #a7d8b1;
+}
+
+/* Image thumbnail or PDF icon */
+
 .file-thumbnail {
-    width: 58px;
-    height: 58px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    background: #eaf7ed;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
     overflow: hidden;
+    border-radius: 8px;
+    background: #eaf7ed;
+    font-size: 28px;
 }
 
 .file-thumbnail img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* File information */
+
 .file-details {
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
 }
 
 .file-name {
+    color: #1e293b;
     font-size: 14px;
     font-weight: 600;
-    color: #1e293b;
+    line-height: 1.45;
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .file-size {
-    margin-top: 5px;
-    font-size: 12px;
+    margin-top: 4px;
     color: #64748b;
+    font-size: 12px;
 }
 
 .file-status {
+    margin-top: 4px;
     color: #15803d;
     font-size: 13px;
     font-weight: 600;
-    margin-top: 4px;
 }
 
+/* Remove selected file */
+
 .file-remove {
-    border: none;
-    background: #fee2e2;
-    color: #b91c1c;
-    border-radius: 7px;
+    flex: 0 0 auto;
     padding: 8px 10px;
-    cursor: pointer;
+    border: none;
+    border-radius: 7px;
+    background: #fee2e2;
+    color: var(--danger);
+    font-family: inherit;
     font-size: 13px;
-    flex-shrink: 0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
 }
 
 .file-remove:hover {
     background: #fecaca;
 }
 
+/* Upload validation errors */
+
 .file-error {
-    color: #b91c1c;
+    padding: 10px 12px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: var(--danger);
     font-size: 13px;
-    margin-top: 8px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
-@media (max-width: 480px) {
+/* =========================================
+   ADDITIONAL EQUIPMENT CHECKBOXES
+========================================= */
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    margin: 0;
+    padding: 10px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.checkbox:hover {
+    border-color: #86c995;
+    background: #f8fdf9;
+}
+
+.checkbox input {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    margin: 0;
+    accent-color: #15803d;
+    cursor: pointer;
+}
+
+.checkbox span {
+    font-size: 14px;
+    font-weight: normal;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   SUBMIT BUTTON
+========================================= */
+
+.submit-button {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    margin-top: 25px;
+    border: none;
+    border-radius: 9px;
+    background: var(--accent);
+    color: #111111;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.submit-button:hover {
+    background: var(--accent-hover);
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =========================================
+   REQUIRED NOTE AND FORM MESSAGES
+========================================= */
+
+.required-note {
+    margin-top: 15px;
+    text-align: center;
+    color: #777777;
+    font-size: 13px;
+}
+
+#message {
+    margin-top: 18px;
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#message:empty {
+    display: none;
+}
+
+/* Optional message classes for app.js */
+
+#message.success {
+    padding: 12px;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+#message.error {
+    padding: 12px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+/* =========================================
+   TABLET AND MOBILE RESPONSIVENESS
+========================================= */
+
+@media (max-width: 550px) {
+    body {
+        padding: 8px;
+    }
+
+    .container {
+        padding: 14px;
+        border-radius: 10px;
+    }
+
+    .header {
+        padding: 8px 4px 18px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .header p {
+        font-size: 14px;
+    }
+
+    .section {
+        margin-top: 18px;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .section h2 {
+        font-size: 18px;
+    }
+
+    #map {
+        height: 300px;
+    }
+
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+
     .file-item {
-        gap: 8px;
+        gap: 9px;
         padding: 9px;
     }
 
     .file-thumbnail {
         width: 48px;
         height: 48px;
+        flex-basis: 48px;
+        font-size: 24px;
     }
 
     .file-remove {
-        padding: 7px;
+        padding: 7px 8px;
+        font-size: 12px;
+    }
+
+    .file-name {
+        font-size: 13px;
+    }
+
+    .submit-button {
+        font-size: 16px;
+    }
+}
+
+/* Extra-small screens */
+
+@media (max-width: 360px) {
+    .container {
+        padding: 9px;
+    }
+
+    .section {
+        padding: 12px;
+    }
+
+    .file-item {
+        flex-wrap: wrap;
+    }
+
+    .file-details {
+        flex-basis: calc(100% - 70px);
+    }
+
+    .file-remove {
+        margin-left: auto;
+    }
+}
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
     }
 }
