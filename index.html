@@ -2,108 +2,88 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PV Installation Inquiry</title>
 
+    <!-- Leaflet map styles -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
+    <!-- Main stylesheet -->
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
 <div class="container">
 
-    <div class="header">
-
+    <!-- HEADER -->
+    <header class="header">
         <div class="solar-icon">☀️</div>
-
         <h1>PV Installation Inquiry</h1>
-
         <p>
-            Please provide the information below
-            so our team can assess your solar PV requirements.
+            Please provide the information below so our team
+            can assess your solar PV requirements.
         </p>
-
-    </div>
-
+    </header>
 
     <form id="clientForm">
 
-        <!-- CLIENT INFORMATION -->
-
-        <div class="section">
-
+        <!-- 1. CLIENT INFORMATION -->
+        <section class="section">
             <h2>Client Information</h2>
 
-
-            <label for="name">
-                Client Name *
-            </label>
-
+            <label for="name">Client Name *</label>
             <input
                 type="text"
                 id="name"
+                name="name"
                 placeholder="Full name"
+                autocomplete="name"
                 required
             >
 
-
-            <label for="phone">
-                Contact Number *
-            </label>
-
+            <label for="phone">Contact Number *</label>
             <input
                 type="tel"
                 id="phone"
+                name="phone"
                 placeholder="Phone number"
+                autocomplete="tel"
                 required
             >
 
-
-            <label for="email">
-                Email Address
-            </label>
-
+            <label for="email">Email Address</label>
             <input
                 type="email"
                 id="email"
+                name="email"
                 placeholder="Email address"
+                autocomplete="email"
             >
 
-
-            <label for="address">
-                Installation Address *
-            </label>
-
+            <label for="address">Installation Address *</label>
             <textarea
                 id="address"
+                name="address"
                 placeholder="Full installation address"
+                autocomplete="street-address"
                 required
             ></textarea>
+        </section>
 
-        </div>
-
-
-        <!-- LOCATION -->
-
-        <div class="section">
-
+        <!-- 2. INSTALLATION LOCATION -->
+        <section class="section">
             <h2>📍 Installation Location</h2>
 
             <p class="help-text">
-                Use your current location or tap the map
-                to place the pin. You can drag the pin
-                to the exact installation location.
+                Use your current location or tap the map to place
+                the pin. You can drag the pin to the exact
+                installation location.
             </p>
 
             <button
@@ -114,110 +94,78 @@
                 📍 Use My Current Location
             </button>
 
-
-            <div id="map"></div>
-
+            <div id="map" aria-label="Installation location map"></div>
 
             <div class="coordinates">
-
                 <div>
                     Latitude:
-                    <span id="latitude">
-                        Not selected
-                    </span>
+                    <span id="latitude">Not selected</span>
                 </div>
 
                 <div>
                     Longitude:
-                    <span id="longitude">
-                        Not selected
-                    </span>
+                    <span id="longitude">Not selected</span>
                 </div>
-
             </div>
 
-        </div>
+            <!-- Hidden coordinate fields for form submission -->
+            <input type="hidden" id="latitudeValue" name="latitude">
+            <input type="hidden" id="longitudeValue" name="longitude">
+        </section>
 
+        <!-- 3. ELECTRICITY BILL AND DOCUMENT UPLOAD -->
+        <section class="section">
+            <h2>⚡ Electricity Bill & Documents</h2>
 
-      <!-- ELECTRICITY BILL UPLOAD -->
+            <p class="help-text">
+                Please upload your latest electricity bill.
+                You can select multiple PDF documents or photos.
+                You can also remove files and add more before submitting.
+            </p>
 
-<div class="section">
+            <label for="electricityBill">
+                Electricity Bills / Documents *
+            </label>
 
-    <h2>⚡ Electricity Bill</h2>
+            <input
+                type="file"
+                id="electricityBill"
+                name="electricityBills"
+                accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                multiple
+                required
+            >
 
-    <p class="help-text">
-        Please upload your latest electricity bill.
-        You can select multiple photos or PDF files.
-    </p>
+            <p class="file-help">
+                Accepted formats: PDF, JPG, JPEG and PNG.
+                Maximum size: 10 MB per file.
+            </p>
 
-    <label for="electricityBill">
-        Electricity Bills / Documents *
-    </label>
+            <!-- JavaScript displays selected file previews here -->
+            <div
+                id="filePreview"
+                class="file-preview"
+                aria-live="polite"
+            ></div>
+        </section>
 
-    <input
-        type="file"
-        id="electricityBill"
-        accept=".pdf,.jpg,.jpeg,.png"
-        multiple
-        required
-    >
-
-    <div class="file-help">
-        Accepted formats: PDF, JPG, JPEG, PNG.
-        You can upload multiple files.
-    </div>
-
-    <!-- Selected files will appear here -->
-    <div id="filePreview" class="file-preview"></div>
-
-</div>
-
-        <!-- PROPERTY INFORMATION -->
-
-        <div class="section">
-
+        <!-- 4. PROPERTY INFORMATION -->
+        <section class="section">
             <h2>🏠 Property Information</h2>
-
 
             <label for="propertyType">
                 What type of property is this? *
             </label>
 
-            <select
-                id="propertyType"
-                required
-            >
-
-                <option value="">
-                    Select property type
-                </option>
-
-                <option value="House">
-                    House
-                </option>
-
-                <option value="Apartment">
-                    Apartment
-                </option>
-
-                <option value="Commercial Building">
-                    Commercial Building
-                </option>
-
-                <option value="Office">
-                    Office
-                </option>
-
-                <option value="Industrial">
-                    Industrial
-                </option>
-
-                <option value="Other">
-                    Other
-                </option>
-
+            <select id="propertyType" name="propertyType" required>
+                <option value="">Select property type</option>
+                <option value="House">House</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Commercial Building">Commercial Building</option>
+                <option value="Office">Office</option>
+                <option value="Industrial">Industrial</option>
+                <option value="Other">Other</option>
             </select>
-
 
             <label for="propertyOwnership">
                 Do you own the property? *
@@ -225,114 +173,61 @@
 
             <select
                 id="propertyOwnership"
+                name="propertyOwnership"
                 required
             >
-
-                <option value="">
-                    Select an option
-                </option>
-
-                <option value="Yes">
-                    Yes
-                </option>
-
-                <option value="No">
-                    No
-                </option>
-
-                <option value="Other">
-                    Other
-                </option>
-
+                <option value="">Select an option</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Other">Other</option>
             </select>
-
 
             <label for="existingPV">
                 Do you currently have solar PV installed? *
             </label>
 
-            <select
-                id="existingPV"
-                required
-            >
-
-                <option value="">
-                    Select an option
-                </option>
-
-                <option value="No">
-                    No
-                </option>
-
-                <option value="Yes">
-                    Yes
-                </option>
-
-                <option value="Not Sure">
-                    Not sure
-                </option>
-
+            <select id="existingPV" name="existingPV" required>
+                <option value="">Select an option</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="Not Sure">Not sure</option>
             </select>
 
-
             <label for="existingPVDetails">
-                If yes, please provide any information
-                about your existing system.
+                If yes, please provide information about your existing system.
             </label>
 
             <textarea
                 id="existingPVDetails"
+                name="existingPVDetails"
                 placeholder="System size, installer, battery, age, etc."
             ></textarea>
+        </section>
 
-        </div>
-
-
-        <!-- FUTURE ELECTRICITY NEEDS -->
-
-        <div class="section">
-
+        <!-- 5. FUTURE ELECTRICITY NEEDS -->
+        <section class="section">
             <h2>🔮 Future Electricity Needs</h2>
 
             <p class="help-text">
-                These questions help us size the system
-                with your future electricity requirements
-                in mind.
+                These questions help us size the system with
+                your future electricity requirements in mind.
             </p>
 
-
             <label for="futureConsumption">
-                Are you planning to increase your
-                electricity consumption? *
+                Are you planning to increase your electricity consumption? *
             </label>
 
             <select
                 id="futureConsumption"
+                name="futureConsumption"
                 required
             >
-
-                <option value="">
-                    Select an option
-                </option>
-
-                <option value="No">
-                    No
-                </option>
-
-                <option value="Yes">
-                    Yes
-                </option>
-
-                <option value="Maybe">
-                    Maybe
-                </option>
-
-                <option value="Not Sure">
-                    Not sure
-                </option>
-
+                <option value="">Select an option</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="Maybe">Maybe</option>
+                <option value="Not Sure">Not sure</option>
             </select>
-
 
             <label for="electricVehicle">
                 Do you plan to have an electric vehicle (EV)? *
@@ -340,262 +235,130 @@
 
             <select
                 id="electricVehicle"
+                name="electricVehicle"
                 required
             >
-
-                <option value="">
-                    Select an option
-                </option>
-
-                <option value="No">
-                    No
-                </option>
-
-                <option value="Yes">
-                    Yes
-                </option>
-
-                <option value="Maybe">
-                    Maybe
-                </option>
-
-                <option value="Already Have One">
-                    Already have an EV
-                </option>
-
+                <option value="">Select an option</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="Maybe">Maybe</option>
+                <option value="Already Have One">Already have an EV</option>
             </select>
 
-
             <label>
-                Are you planning any additional
-                electrical equipment?
+                Are you planning any additional electrical equipment?
             </label>
 
             <div class="checkbox-group">
 
                 <label class="checkbox">
-
-                    <input
-                        type="checkbox"
-                        name="equipment"
-                        value="EV Charger"
-                    >
-
+                    <input type="checkbox" name="equipment" value="EV Charger">
                     <span>EV charger</span>
-
                 </label>
 
-
                 <label class="checkbox">
-
-                    <input
-                        type="checkbox"
-                        name="equipment"
-                        value="Swimming Pool"
-                    >
-
+                    <input type="checkbox" name="equipment" value="Swimming Pool">
                     <span>Swimming pool</span>
-
                 </label>
 
-
                 <label class="checkbox">
-
-                    <input
-                        type="checkbox"
-                        name="equipment"
-                        value="Air Conditioning"
-                    >
-
+                    <input type="checkbox" name="equipment" value="Air Conditioning">
                     <span>Air conditioning</span>
-
                 </label>
 
-
                 <label class="checkbox">
-
-                    <input
-                        type="checkbox"
-                        name="equipment"
-                        value="Heat Pump"
-                    >
-
+                    <input type="checkbox" name="equipment" value="Heat Pump">
                     <span>Heat pump</span>
-
                 </label>
 
-
                 <label class="checkbox">
-
-                    <input
-                        type="checkbox"
-                        name="equipment"
-                        value="Water Heater"
-                    >
-
+                    <input type="checkbox" name="equipment" value="Water Heater">
                     <span>Water heater</span>
-
                 </label>
 
-
                 <label class="checkbox">
-
-                    <input
-                        type="checkbox"
-                        name="equipment"
-                        value="Building Extension"
-                    >
-
+                    <input type="checkbox" name="equipment" value="Building Extension">
                     <span>Building extension</span>
-
                 </label>
 
-
                 <label class="checkbox">
-
-                    <input
-                        type="checkbox"
-                        name="equipment"
-                        value="Other"
-                    >
-
+                    <input type="checkbox" name="equipment" value="Other">
                     <span>Other</span>
-
                 </label>
 
             </div>
 
-
             <label for="extension">
-                Are you planning an extension
-                or additional building? *
+                Are you planning an extension or additional building? *
             </label>
 
-            <select
-                id="extension"
-                required
-            >
-
-                <option value="">
-                    Select an option
-                </option>
-
-                <option value="No">
-                    No
-                </option>
-
-                <option value="Yes">
-                    Yes
-                </option>
-
-                <option value="Maybe">
-                    Maybe
-                </option>
-
+            <select id="extension" name="extension" required>
+                <option value="">Select an option</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                <option value="Maybe">Maybe</option>
             </select>
+        </section>
 
-        </div>
-
-
-        <!-- REASON FOR SOLAR -->
-
-        <div class="section">
-
+        <!-- 6. SOLAR REQUIREMENTS -->
+        <section class="section">
             <h2>☀️ Your Solar Requirements</h2>
 
-
             <label for="solarReason">
-                What is your main reason
-                for considering solar PV? *
+                What is your main reason for considering solar PV? *
             </label>
 
-            <select
-                id="solarReason"
-                required
-            >
-
-                <option value="">
-                    Select your main reason
-                </option>
-
-                <option value="Reduce Electricity Bill">
-                    Reduce electricity bill
-                </option>
-
-                <option value="Energy Independence">
-                    Energy independence
-                </option>
-
-                <option value="Environmental Reasons">
-                    Environmental reasons
-                </option>
-
-                <option value="Backup / Resilience">
-                    Backup / resilience
-                </option>
-
-                <option value="New Construction">
-                    New construction
-                </option>
-
-                <option value="Other">
-                    Other
-                </option>
-
+            <select id="solarReason" name="solarReason" required>
+                <option value="">Select your main reason</option>
+                <option value="Reduce Electricity Bill">Reduce electricity bill</option>
+                <option value="Energy Independence">Energy independence</option>
+                <option value="Environmental Reasons">Environmental reasons</option>
+                <option value="Backup / Resilience">Backup / resilience</option>
+                <option value="New Construction">New construction</option>
+                <option value="Other">Other</option>
             </select>
+        </section>
 
-        </div>
-
-
-        <!-- ADDITIONAL INFORMATION -->
-
-        <div class="section">
-
+        <!-- 7. ADDITIONAL INFORMATION -->
+        <section class="section">
             <h2>📝 Additional Information</h2>
 
             <p class="help-text">
-                Is there anything else our PV team
-                should know about your property,
-                electricity usage or future plans?
+                Is there anything else our PV team should know
+                about your property, electricity usage or future plans?
             </p>
 
             <textarea
                 id="notes"
+                name="notes"
                 class="large-textarea"
                 placeholder="Please tell us anything else that may be useful..."
             ></textarea>
+        </section>
 
-        </div>
-
-
-        <!-- SUBMIT -->
-
+        <!-- SUBMISSION -->
         <button
             type="submit"
             class="submit-button"
+            id="submitButton"
         >
             Submit PV Inquiry
         </button>
 
-
-        <p class="required-note">
-            * Required fields
-        </p>
+        <p class="required-note">* Required fields</p>
 
     </form>
 
-
-    <div id="message"></div>
+    <!-- Form success and error messages -->
+    <div id="message" role="status" aria-live="polite"></div>
 
 </div>
 
+<!-- Leaflet map library -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
-
+<!-- Main application JavaScript -->
 <script src="app.js"></script>
 
 </body>
-
 </html>
