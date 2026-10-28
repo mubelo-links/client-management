@@ -58,8 +58,3 @@ export default {
     return env.ASSETS.fetch(request);
   }
 };
-
-    // Preserve normal static-asset serving for non-API requests.
-    return env.ASSETS.fetch(request);
-  }
-};
