@@ -1,10 +1,16 @@
 .git
+.git/**
 .wrangler
+.wrangler/**
 node_modules
+node_modules/**
 .env
 .env.*
 .dev.vars
 .dev.vars.*
+worker.js
 wrangler.jsonc
 wrangler.toml
+.gitignore
+.assetsignore
 README.md
