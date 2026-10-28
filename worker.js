@@ -1,4 +1,3 @@
-
 const ALLOWED_ORIGIN = "https://mubelo-links.github.io";
 
 function jsonResponse(data, status) {
